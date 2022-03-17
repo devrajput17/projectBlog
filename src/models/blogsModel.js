@@ -24,7 +24,7 @@ const blogSchema = new mongoose.Schema( {
    },
    subcategory:[String],
    
-   deleteAt:{
+   deletedAt:{
        type:Date
 
    },

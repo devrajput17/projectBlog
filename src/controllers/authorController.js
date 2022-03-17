@@ -1,6 +1,6 @@
 const authorModel= require('../models/authorModel')
 const mongoose= require('mongoose')
-
+const jwt = require('jsonwebtoken')
 
 const createAuthor= async function (req, res) {
     
@@ -21,4 +21,26 @@ catch (err){
 }
 
 
+// Phase 2
+
+const loginauthor = async function (req, res){
+    try{
+        let userName = req.body.email;
+        let password = req.body.password;
+
+        let author = await authorModel.findOne({email: userName, password:password})
+        if(!author)
+        return res.status(400).send({status:false, msg:"username or password is invalid"})
+
+        let token = jwt.sign({authorId:author._id},"secret key");
+        res.header("x-api key", token);
+        res.status(200).send({status:true, data:token});
+
+    }
+    catch(err){
+       res.status(500).send({status:false, msg:err.message})
+    }
+}
+
 module.exports.createAuthor=createAuthor
+module.exports.loginAuthor=loginauthor
